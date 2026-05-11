@@ -1,0 +1,38 @@
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 8px 20px;
+  border: 2px solid #e8d5c8;
+  border-radius: 25px;
+  background: #fff;
+  color: #8b7355;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.25s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+}
+
+.filter-btn:hover {
+  border-color: #ff9a9e;
+  background: #fff5f5;
+}
+
+.filter-btn.active {
+  background: #ff9a9e;
+  border-color: #ff9a9e;
+  color: #fff;
+  box-shadow: 0 3px 12px rgba(255, 154, 158, 0.35);
+}
+
+.filter-emoji {
+  font-size: 18px;
+}

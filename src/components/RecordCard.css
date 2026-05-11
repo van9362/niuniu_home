@@ -1,0 +1,78 @@
+.record-card {
+  display: block;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.25s, box-shadow 0.25s;
+  border: 2px solid #f0e8e0;
+}
+
+.record-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  border-color: #ffd93d;
+}
+
+.card-image {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #fef5e7;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-count {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.card-body {
+  padding: 18px;
+}
+
+.card-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: #5d4e37;
+  font-family: 'ZCOOL KuaiLe', cursive;
+}
+
+.card-desc {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: #8b7355;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #b8a590;
+}
+
+.card-author {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

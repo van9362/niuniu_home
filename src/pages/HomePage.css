@@ -1,0 +1,55 @@
+.home-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px 40px;
+}
+
+.hero {
+  text-align: center;
+  padding: 40px 0 10px;
+}
+
+.hero-title {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 36px;
+  color: #5d4e37;
+  margin: 0;
+}
+
+.hero-subtitle {
+  font-size: 16px;
+  color: #b8a590;
+  margin: 8px 0 0;
+}
+
+.error-msg {
+  background: #fff0f0;
+  color: #e74c3c;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #b8a590;
+  font-size: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #b8a590;
+}
+
+.empty-emoji {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
