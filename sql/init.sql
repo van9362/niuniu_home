@@ -21,22 +21,20 @@ ALTER TABLE records ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Anyone can read records" ON records
   FOR SELECT USING (true);
 
--- 4. RLS 策略：只有认证用户可以添加
-CREATE POLICY "Authenticated users can insert records" ON records
-  FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+-- 4. RLS 策略：任何人都可以添加（前端密码保护）
+CREATE POLICY "Anyone can insert records" ON records
+  FOR INSERT WITH CHECK (true);
 
--- 5. RLS 策略：只有认证用户可以更新
-CREATE POLICY "Authenticated users can update records" ON records
-  FOR UPDATE USING (auth.role() = 'authenticated');
+-- 5. RLS 策略：任何人都可以更新（前端密码保护）
+CREATE POLICY "Anyone can update records" ON records
+  FOR UPDATE USING (true);
 
--- 6. RLS 策略：只有认证用户可以删除
-CREATE POLICY "Authenticated users can delete records" ON records
-  FOR DELETE USING (auth.role() = 'authenticated');
+-- 6. RLS 策略：任何人都可以删除（前端密码保护）
+CREATE POLICY "Anyone can delete records" ON records
+  FOR DELETE USING (true);
 
 -- ============================================================
--- 7. 创建 Storage Bucket (在 Supabase Dashboard: Storage > New Bucket)
---    名称: images, 勾选 "Public bucket"
---    或者用 SQL:
+-- 7. Storage Bucket
 -- ============================================================
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('images', 'images', true)
@@ -46,10 +44,10 @@ ON CONFLICT (id) DO NOTHING;
 CREATE POLICY "Anyone can view images" ON storage.objects
   FOR SELECT USING (bucket_id = 'images');
 
--- 9. Storage RLS 策略：认证用户可以上传
-CREATE POLICY "Authenticated users can upload images" ON storage.objects
-  FOR INSERT WITH CHECK (bucket_id = 'images' AND auth.role() = 'authenticated');
+-- 9. Storage RLS 策略：任何人都可以上传
+CREATE POLICY "Anyone can upload images" ON storage.objects
+  FOR INSERT WITH CHECK (bucket_id = 'images');
 
--- 10. Storage RLS 策略：认证用户可以删除
-CREATE POLICY "Authenticated users can delete images" ON storage.objects
-  FOR DELETE USING (bucket_id = 'images' AND auth.role() = 'authenticated');
+-- 10. Storage RLS 策略：任何人都可以删除
+CREATE POLICY "Anyone can delete images" ON storage.objects
+  FOR DELETE USING (bucket_id = 'images');

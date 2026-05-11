@@ -1,13 +1,35 @@
-import { useState } from 'react';
-import { useRecords } from '../hooks/useRecords';
+import { useState, useEffect, useCallback } from 'react';
+import { useRecords, fetchAvailableYears } from '../hooks/useRecords';
 import { RecordCard } from '../components/RecordCard';
-import { FilterBar } from '../components/FilterBar';
-import type { Author } from '../types';
+import { YearFilter } from '../components/YearFilter';
+import { AddRecordModal } from '../components/AddRecordModal';
 import './HomePage.css';
 
 export function HomePage() {
-  const [author, setAuthor] = useState<Author | 'all'>('all');
-  const { records, loading, error } = useRecords(author);
+  const currentYear = new Date().getFullYear();
+  const [year, setYear] = useState(currentYear);
+  const [availableYears, setAvailableYears] = useState<number[]>([]);
+  const [showModal, setShowModal] = useState(false);
+
+  const { records, loading, error, refetch } = useRecords(year);
+
+  useEffect(() => {
+    fetchAvailableYears().then(setAvailableYears);
+  }, []);
+
+  const handleModalClose = useCallback(() => {
+    setShowModal(false);
+  }, []);
+
+  const handleModalSuccess = useCallback(() => {
+    setShowModal(false);
+    refetch();
+    fetchAvailableYears().then(setAvailableYears);
+  }, [refetch]);
+
+  const openAddModal = () => {
+    setShowModal(true);
+  };
 
   return (
     <div className="home-page">
@@ -16,7 +38,17 @@ export function HomePage() {
         <p className="hero-subtitle">记录每一个珍贵的成长瞬间</p>
       </div>
 
-      <FilterBar active={author} onChange={setAuthor} />
+      <div className="toolbar">
+        <button className="add-btn" onClick={openAddModal}>
+          ➕ 添加记录
+        </button>
+      </div>
+
+      <YearFilter
+        year={year}
+        availableYears={availableYears}
+        onChange={setYear}
+      />
 
       {error && <div className="error-msg">加载失败: {error}</div>}
 
@@ -33,6 +65,15 @@ export function HomePage() {
             <RecordCard key={record.id} record={record} />
           ))}
         </div>
+      )}
+
+      {showModal && (
+        <AddRecordModal
+          mode="add"
+          initialData={null}
+          onClose={handleModalClose}
+          onSuccess={handleModalSuccess}
+        />
       )}
     </div>
   );

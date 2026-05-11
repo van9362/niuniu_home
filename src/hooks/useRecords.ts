@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
-import type { GrowthRecord, Author, RecordFormData } from '../types';
+import type { GrowthRecord, RecordFormData } from '../types';
 import { compressImage } from '../utils/compressImage';
 
-export function useRecords(filterAuthor?: Author | 'all') {
+export function useRecords(year: number) {
   const [records, setRecords] = useState<GrowthRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -11,16 +11,16 @@ export function useRecords(filterAuthor?: Author | 'all') {
   const fetchRecords = useCallback(async () => {
     setLoading(true);
     try {
-      let query = supabase
+      const startDate = `${year}-01-01`;
+      const endDate = `${year}-12-31`;
+
+      const { data, error: err } = await supabase
         .from('records')
         .select('*')
+        .gte('record_date', startDate)
+        .lte('record_date', endDate)
         .order('record_date', { ascending: false });
 
-      if (filterAuthor && filterAuthor !== 'all') {
-        query = query.eq('author', filterAuthor);
-      }
-
-      const { data, error: err } = await query;
       if (err) {
         setError(err.message);
       } else {
@@ -31,7 +31,7 @@ export function useRecords(filterAuthor?: Author | 'all') {
       setError(e.message);
     }
     setLoading(false);
-  }, [filterAuthor]);
+  }, [year]);
 
   useEffect(() => {
     fetchRecords();
@@ -40,7 +40,7 @@ export function useRecords(filterAuthor?: Author | 'all') {
   return { records, loading, error, refetch: fetchRecords };
 }
 
-export async function uploadImages(files: File[]): Promise<string[]> {
+async function uploadImages(files: File[]): Promise<string[]> {
   const urls: string[] = [];
   for (const file of files) {
     const compressed = await compressImage(file);
@@ -69,4 +69,41 @@ export async function addRecord(data: RecordFormData): Promise<void> {
       author: data.author,
     });
   if (error) throw error;
+}
+
+export async function updateRecord(id: string, data: RecordFormData): Promise<void> {
+  const newUrls = await uploadImages(data.images);
+  const allImages = [...data.existingImages, ...newUrls];
+  const { error } = await supabase
+    .from('records')
+    .update({
+      title: data.title,
+      description: data.description,
+      images: allImages,
+      record_date: data.record_date,
+      author: data.author,
+    })
+    .eq('id', id);
+  if (error) throw error;
+}
+
+export async function deleteRecord(id: string): Promise<void> {
+  const { error } = await supabase
+    .from('records')
+    .delete()
+    .eq('id', id);
+  if (error) throw error;
+}
+
+export async function fetchAvailableYears(): Promise<number[]> {
+  const { data, error } = await supabase
+    .from('records')
+    .select('record_date');
+  if (error || !data) return [];
+  const years = new Set<number>();
+  data.forEach((r: any) => {
+    const y = new Date(r.record_date).getFullYear();
+    years.add(y);
+  });
+  return Array.from(years).sort((a, b) => b - a);
 }

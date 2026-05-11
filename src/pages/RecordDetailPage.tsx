@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { deleteRecord } from '../hooks/useRecords';
+import { AddRecordModal } from '../components/AddRecordModal';
+import { checkPassword } from '../utils/password';
 import type { GrowthRecord } from '../types';
 import './RecordDetailPage.css';
 
@@ -12,11 +15,17 @@ const authorInfo: Record<string, { emoji: string; label: string }> = {
 
 export function RecordDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [record, setRecord] = useState<GrowthRecord | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [deleteError, setDeleteError] = useState('');
+  const [deleting, setDeleting] = useState(false);
 
-  useEffect(() => {
+  const fetchRecord = () => {
     if (!id) return;
     supabase
       .from('records')
@@ -27,7 +36,27 @@ export function RecordDetailPage() {
         if (!error) setRecord(data);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchRecord();
   }, [id]);
+
+  const handleDelete = async () => {
+    if (!checkPassword(deletePassword)) {
+      setDeleteError('密码错误');
+      return;
+    }
+    setDeleting(true);
+    try {
+      await deleteRecord(id!);
+      navigate('/');
+    } catch (err: any) {
+      setDeleteError(err.message || '删除失败');
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   if (loading) return <div className="loading">加载中...</div>;
   if (!record) return <div className="error-msg">记录不存在</div>;
@@ -67,6 +96,40 @@ export function RecordDetailPage() {
         {record.description && (
           <p className="detail-desc">{record.description}</p>
         )}
+
+        <div className="detail-actions">
+          <button className="action-btn edit" onClick={() => setShowEditModal(true)}>
+            ✏️ 编辑
+          </button>
+          <button className="action-btn delete" onClick={() => setShowDeleteConfirm(true)}>
+            🗑️ 删除
+          </button>
+        </div>
+
+        {showDeleteConfirm && (
+          <div className="delete-confirm">
+            <p>确认删除这条记录？</p>
+            <input
+              type="password"
+              className="form-input"
+              placeholder="请输入密码"
+              value={deletePassword}
+              onChange={(e) => { setDeletePassword(e.target.value); setDeleteError(''); }}
+            />
+            {deleteError && <span className="delete-error">{deleteError}</span>}
+            <div className="delete-btns">
+              <button
+                className="cancel-btn"
+                onClick={() => { setShowDeleteConfirm(false); setDeletePassword(''); setDeleteError(''); }}
+              >
+                取消
+              </button>
+              <button className="delete-btn" onClick={handleDelete} disabled={deleting || !deletePassword}>
+                {deleting ? '删除中...' : '确认删除'}
+              </button>
+            </div>
+          </div>
+        )}
       </article>
 
       {selectedImage && (
@@ -76,6 +139,15 @@ export function RecordDetailPage() {
             ✕
           </button>
         </div>
+      )}
+
+      {showEditModal && (
+        <AddRecordModal
+          mode="edit"
+          initialData={record}
+          onClose={() => setShowEditModal(false)}
+          onSuccess={() => { setShowEditModal(false); fetchRecord(); }}
+        />
       )}
     </div>
   );
