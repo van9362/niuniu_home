@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
 import { HomePage } from './pages/HomePage';
 import { RecordDetailPage } from './pages/RecordDetailPage';
+import { MealsPage } from './pages/MealsPage';
 import './App.css';
 
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/record/:id" element={<RecordDetailPage />} />
+          <Route path="/meals" element={<MealsPage />} />
         </Routes>
       </main>
       <footer className="footer">

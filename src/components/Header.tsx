@@ -10,6 +10,7 @@ export function Header() {
         </Link>
         <nav className="nav">
           <Link to="/" className="nav-link">首页</Link>
+          <Link to="/meals" className="nav-link">🍚 吃饭</Link>
         </nav>
       </div>
     </header>

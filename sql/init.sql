@@ -51,3 +51,36 @@ CREATE POLICY "Anyone can upload images" ON storage.objects
 -- 10. Storage RLS 策略：任何人都可以删除
 CREATE POLICY "Anyone can delete images" ON storage.objects
   FOR DELETE USING (bucket_id = 'images');
+
+-- ============================================================
+-- 11. 吃饭功能 - 菜品库
+-- ============================================================
+CREATE TABLE IF NOT EXISTS meal_options (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL CHECK (category IN ('荤菜', '素菜', '主食', '汤', '其他')),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE meal_options ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can read meal_options" ON meal_options FOR SELECT USING (true);
+CREATE POLICY "Anyone can insert meal_options" ON meal_options FOR INSERT WITH CHECK (true);
+CREATE POLICY "Anyone can update meal_options" ON meal_options FOR UPDATE USING (true);
+CREATE POLICY "Anyone can delete meal_options" ON meal_options FOR DELETE USING (true);
+
+-- ============================================================
+-- 12. 吃饭功能 - 吃饭记录
+-- ============================================================
+CREATE TABLE IF NOT EXISTS meal_records (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  meal_name TEXT NOT NULL,
+  meal_date DATE NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE meal_records ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can read meal_records" ON meal_records FOR SELECT USING (true);
+CREATE POLICY "Anyone can insert meal_records" ON meal_records FOR INSERT WITH CHECK (true);
+CREATE POLICY "Anyone can delete meal_records" ON meal_records FOR DELETE USING (true);

@@ -20,3 +20,19 @@ export interface RecordFormData {
   record_date: string;
   author: Author;
 }
+
+export type MealCategory = '荤菜' | '素菜' | '主食' | '汤' | '其他';
+
+export interface MealOption {
+  id: string;
+  name: string;
+  category: MealCategory;
+  created_at: string;
+}
+
+export interface MealRecord {
+  id: string;
+  meal_name: string;
+  meal_date: string;
+  created_at: string;
+}
