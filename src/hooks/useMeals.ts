@@ -1,29 +1,29 @@
 import { supabase } from '../lib/supabase';
-import type { MealOption, MealRecord, MealCategory } from '../types';
+import type { MealOption, MealRecord } from '../types';
 import { checkPassword } from '../utils/password';
 
 export async function fetchMealOptions(): Promise<MealOption[]> {
   const { data, error } = await supabase
     .from('meal_options')
-    .select('*')
+    .select('id,name,created_at')
     .order('created_at', { ascending: false });
   if (error) throw error;
   return data || [];
 }
 
-export async function addMealOption(name: string, category: MealCategory, password: string): Promise<void> {
+export async function addMealOption(name: string, password: string): Promise<void> {
   if (!checkPassword(password)) throw new Error('密码错误');
   const { error } = await supabase
     .from('meal_options')
-    .insert({ name, category });
+    .insert({ name });
   if (error) throw error;
 }
 
-export async function updateMealOption(id: string, name: string, category: MealCategory, password: string): Promise<void> {
+export async function updateMealOption(id: string, name: string, password: string): Promise<void> {
   if (!checkPassword(password)) throw new Error('密码错误');
   const { error } = await supabase
     .from('meal_options')
-    .update({ name, category })
+    .update({ name })
     .eq('id', id);
   if (error) throw error;
 }

@@ -26,7 +26,6 @@ export type MealCategory = '荤菜' | '素菜' | '主食' | '汤' | '其他';
 export interface MealOption {
   id: string;
   name: string;
-  category: MealCategory;
   created_at: string;
 }
 

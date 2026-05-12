@@ -3,6 +3,7 @@ import { Header } from './components/Header';
 import { HomePage } from './pages/HomePage';
 import { RecordDetailPage } from './pages/RecordDetailPage';
 import { MealsPage } from './pages/MealsPage';
+import { LibraryPage } from './pages/LibraryPage';
 import './App.css';
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/record/:id" element={<RecordDetailPage />} />
           <Route path="/meals" element={<MealsPage />} />
+          <Route path="/library" element={<LibraryPage />} />
         </Routes>
       </main>
       <footer className="footer">
