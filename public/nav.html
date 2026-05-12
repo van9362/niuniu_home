@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPEN NAV</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --red: #EE1515;
+  --dark-red: #C00;
+  --yellow: #FFCB05;
+  --dark-yellow: #E6B800;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: #f3f3f3;
+  color: #333;
+  min-height: 100vh;
+  padding: 0 0 30px;
+  margin: 0;
+}
+
+/* ---- Hero ---- */
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 360px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  background: url(images/kv-pc-220122.jpg) center/cover no-repeat;
+}
+
+/* Title on top */
+.hero-title-group {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 3;
+}
+.hero-title-group h1 {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 18px;
+  color: var(--yellow);
+  text-shadow: 2px 2px 0 var(--dark-red), 0 0 16px rgba(255,203,5,0.3);
+  margin: 0;
+}
+
+/* Search below title, with bee on the right */
+.hero-search {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.hero-search .search-input {
+  width: 360px;
+  padding: 9px 14px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.85);
+  color: #333;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+}
+.hero-search .search-input:focus { border-color: var(--yellow); }
+.hero-search .search-input::placeholder { color: #999; }
+
+.hero-search .engine-tabs { display: flex; gap: 4px; }
+.hero-search .engine-tab {
+  padding: 7px 11px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.7);
+  color: #666;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.hero-search .engine-tab:hover { border-color: var(--yellow); color: #444; }
+.hero-search .engine-tab.active {
+  border-color: var(--yellow);
+  background: rgba(255,255,255,0.95);
+  color: #333;
+  font-weight: 700;
+}
+.hero-search .search-btn {
+  padding: 9px 18px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--yellow), var(--dark-yellow));
+  color: #333;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.hero-search .search-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(200,150,0,0.3);
+}
+.hero-bee {
+  flex-shrink: 0;
+  animation: float 3s ease-in-out infinite alternate;
+  image-rendering: pixelated;
+}
+
+/* Bottom row: left group + walkers between + right group */
+.hero-bottom {
+  position: absolute;
+  bottom: 8px;
+  left: 0; right: 0;
+  height: 80px;
+  z-index: 3;
+}
+.hero-bottom .hero-static {
+  position: absolute;
+  bottom: 0;
+  image-rendering: pixelated;
+  animation: bounce 4s ease-in-out infinite;
+}
+/* Left 4 */
+.hero-bottom .hero-static:nth-child(1) { left: 2%; animation-delay: 0s; }   /* ushi */
+.hero-bottom .hero-static:nth-child(2) { left: 8%; animation-delay: 1.5s; }  /* uma */
+.hero-bottom .hero-static:nth-child(3) { left: 14%; animation-delay: 3.0s; } /* kabocha-new */
+.hero-bottom .hero-static:nth-child(4) { left: 20%; animation-delay: 2.2s; } /* sisimai */
+/* Right 3 */
+.hero-bottom .hero-static:nth-child(5) { right: 14%; animation-delay: 0.8s; } /* tonakai */
+.hero-bottom .hero-static:nth-child(6) { right: 8%; animation-delay: 0.5s; }  /* kabocha */
+.hero-bottom .hero-static:nth-child(7) { right: 2%; animation-delay: 1.8s; }  /* ringo */
+
+.hero-walker {
+  position: absolute;
+  bottom: 10px;
+  z-index: 4;
+  image-rendering: pixelated;
+}
+.hero-walker:nth-child(8)  { animation: walkAcross 18s linear infinite; }
+.hero-walker:nth-child(9)  { animation: walkAcross 18s -9s linear infinite; }
+
+@keyframes walkAcross {
+  0%   { left: 24%; transform: scaleX(1); }
+  49%  { left: 74%; transform: scaleX(1); }
+  50%  { left: 74%; transform: scaleX(-1); }
+  99%  { left: 24%; transform: scaleX(-1); }
+  100% { left: 24%; transform: scaleX(1); }
+}
+
+@keyframes float {
+  from { transform: translateY(0); }
+  to { transform: translateY(-8px); }
+}
+
+@keyframes bounce {
+  0%, 63%, 100% { transform: translateY(0); }
+  65%  { transform: translateY(-4px); }
+  71%  { transform: translateY(-10px); }
+  73%  { transform: translateY(-3px); }
+  75%  { transform: translateY(-14px); }
+  78%  { transform: translateY(-8px); }
+  80%  { transform: translateY(-2px); }
+  83%  { transform: translateY(0); }
+  88%  { transform: translateY(3px); }
+  90%  { transform: translateY(0); }
+}
+
+.container { max-width: 1000px; margin: 0 auto; }
+
+/* ---- Toolbar ---- */
+.toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.tool-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 8px;
+  background: #fff;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  color: #555;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.tool-btn:hover {
+  border-color: var(--yellow);
+  color: #333;
+  transform: translateY(-1px);
+}
+.tool-btn .icon { font-size: 16px; }
+
+/* ---- Quick Links ---- */
+.quick-section {
+  background: #fff;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+.quick-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px;
+  background: #f7f7f7;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  color: #555;
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.quick-btn .icon { font-size: 22px; line-height: 1; }
+.quick-btn:hover {
+  border-color: var(--yellow);
+  background: #fff;
+  color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* ---- Content Grid ---- */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+@media (max-width: 800px) { .content-grid { grid-template-columns: 1fr 1fr; } .quick-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 520px) { .content-grid { grid-template-columns: 1fr; } .quick-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.card {
+  background: #fff;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 10px;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid #eee;
+}
+.card-header .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+  border: 2px solid #fff;
+}
+.card-header h2 { font-size: 12px; font-weight: 700; color: #444; }
+.card-list { display: flex; flex-direction: column; gap: 3px; }
+.card-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 3px 0;
+  border-bottom: 1px solid #f0f0f0;
+  text-decoration: none;
+  color: #444;
+  font-size: 11px;
+  line-height: 1.4;
+  transition: color 0.15s;
+}
+.card-item:last-child { border-bottom: none; }
+.card-item .index { color: #aaa; font-size: 10px; min-width: 16px; font-weight: 600; }
+.card-item .index.hot { color: var(--red); }
+.card-item:hover { color: var(--red); }
+.card-item:hover .index { color: var(--red); }
+
+/* ---- Debug Box ---- */
+.debug-box {
+  padding: 8px;
+  font-size: 10px;
+  color: #888;
+}
+.debug-title {
+  color: #e74c3c;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.debug-msg {
+  background: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 9px;
+  line-height: 1.5;
+  color: #666;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+/* ---- NBA ---- */
+.nba-row { margin-bottom: 10px; }
+.nba-score { text-align: center; padding: 14px 10px; }
+.nba-score .status { font-size: 11px; color: #888; margin-bottom: 8px; }
+.nba-score .matchup { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; font-weight: 700; }
+.nba-score .team { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.nba-score .team .logo {
+  width: 36px; height: 36px;
+  background: #f0f0f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.nba-score .score {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 22px;
+  color: var(--red);
+  margin-top: 6px;
+}
+
+.loading-text { text-align: center; color: #aaa; font-size: 11px; padding: 20px 0; }
+.empty-text { text-align: center; color: #aaa; font-size: 10px; padding: 14px 0; }
+
+.footer { text-align: center; padding: 16px 0 4px; color: #aaa; font-size: 10px; }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero-section">
+  <div class="hero-title-group">
+    <h1>OPEN NAV</h1>
+  </div>
+
+  <div class="hero-search">
+    <div class="engine-tabs" id="engineTabs">
+      <button class="engine-tab active" data-engine="baidu">百度</button>
+      <button class="engine-tab" data-engine="google">Google</button>
+    </div>
+    <input id="searchInput" class="search-input" type="text" placeholder="输入搜索内容..." autocomplete="off">
+    <button id="searchBtn" class="search-btn">🔍 搜索</button>
+    <img class="hero-bee" src="images/hachi3.png" alt="" width="56">
+  </div>
+
+  <div class="hero-bottom">
+    <!-- Left 4 -->
+    <img class="hero-static" src="images/ushi2.png" alt="" width="50">
+    <img class="hero-static" src="images/uma2.png" alt="" width="55">
+    <img class="hero-static" src="images/kabocha-new.png" alt="" width="46">
+    <img class="hero-static" src="images/sisimai-new.png" alt="" width="44">
+    <!-- Right 3 -->
+    <img class="hero-static" src="images/tonakai-new.png" alt="" width="52">
+    <img class="hero-static" src="images/kabocha.png" alt="" width="36">
+    <img class="hero-static" src="images/ringo.png" alt="" width="36">
+    <!-- Walkers between -->
+    <img class="hero-walker" src="images/hito.gif" alt="" width="110">
+    <img class="hero-walker" src="images/hito.gif" alt="" width="110">
+  </div>
+</div>
+
+<div class="container" style="padding:0 16px;">
+
+  <div class="toolbar">
+    <a class="tool-btn" href="https://www.json.cn/" target="_blank"><span class="icon">📋</span> JSON工具</a>
+    <a class="tool-btn" href="http://172.16.1.128/gchs/devices/gt1000/projects/-/merge_requests" target="_blank"><span class="icon">🔀</span> GitLab MR</a>
+    <a class="tool-btn" href="https://opencode.ai/zh" target="_blank"><span class="icon">📖</span> OpenCode</a>
+  </div>
+
+  <div class="quick-section">
+    <div class="quick-grid">
+      <a class="quick-btn" href="https://chat.deepseek.com" target="_blank"><span class="icon">🐳</span> DeepSeek</a>
+      <a class="quick-btn" href="https://kimi.moonshot.cn" target="_blank"><span class="icon">🌙</span> Kimi</a>
+      <a class="quick-btn" href="https://gemini.google.com" target="_blank"><span class="icon">💎</span> Gemini</a>
+      <a class="quick-btn" href="https://github.com" target="_blank"><span class="icon">🐱</span> GitHub</a>
+      <a class="quick-btn" href="https://www.baidu.com" target="_blank"><span class="icon">🔍</span> 百度</a>
+      <a class="quick-btn" href="https://juejin.cn" target="_blank"><span class="icon">⛏️</span> 稀土掘金</a>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="card">
+      <div class="card-header"><span class="dot"></span><h2>知乎热榜</h2></div>
+      <div id="zhihu-list" class="card-list"><div class="loading-text">加载中...</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="dot" style="background:#1E80FF"></span><h2>稀土掘金热榜</h2></div>
+      <div id="juejin-list" class="card-list"><div class="loading-text">加载中...</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="dot" style="background:#FF6B00"></span><h2>虎扑热帖</h2></div>
+      <div id="hupu-list" class="card-list"><div class="loading-text">加载中...</div></div>
+    </div>
+  </div>
+
+  <div class="card nba-row">
+    <div class="card-header"><span class="dot" style="background:#860038"></span><h2>🏀 克利夫兰骑士队 · 今日比赛</h2></div>
+    <div id="nba-score" class="nba-score"><div class="loading-text">加载中...</div></div>
+  </div>
+
+</div>
+
+<div class="footer"><p>OPEN NAV · 数据来源: 知乎 / 稀土掘金 / 虎扑 / ESPN</p></div>
+
+<script>
+// ====== Search ======
+let engine = 'baidu';
+const engines = {
+  baidu:  q => `https://www.baidu.com/s?wd=${encodeURIComponent(q)}`,
+  google: q => `https://www.google.com/search?q=${encodeURIComponent(q)}`,
+};
+
+function doSearch() {
+  const q = document.getElementById('searchInput').value.trim();
+  if (!q) return;
+  window.open(engines[engine](q), '_blank');
+}
+
+document.getElementById('engineTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.engine-tab');
+  if (!tab) return;
+  engine = tab.dataset.engine;
+  document.querySelectorAll('.engine-tab').forEach(b => b.classList.toggle('active', b.dataset.engine === engine));
+});
+
+document.getElementById('searchBtn').addEventListener('click', doSearch);
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doSearch();
+});
+
+// ====== Utils ======
+const CORS = 'https://corsproxy.io/?';
+
+function limit(str, n) {
+  return str && str.length > n ? str.slice(0, n) + '...' : str;
+}
+
+function renderList(id, items) {
+  const el = document.getElementById(id);
+  if (!items.length) {
+    el.innerHTML = '<div class="empty-text">暂无数据</div>';
+    return;
+  }
+  el.innerHTML = items.map((item, i) => {
+    const cls = i < 3 ? 'index hot' : 'index';
+    return `<a class="card-item" href="${item.url}" target="_blank" title="${item.title}">
+      <span class="${cls}">${i + 1}</span>
+      <span>${limit(item.title, 40)}</span>
+    </a>`;
+  }).join('');
+}
+
+// ====== Hot Lists ======
+(async function loadHotLists() {
+  try {
+    const res = await fetch(CORS + encodeURIComponent('https://momoyu.cc/api/hot/list?type=0'));
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    if (json.status !== 100000) throw new Error('API status: ' + json.status);
+
+    const sources = json.data || [];
+    const find = key => sources.find(s => s.source_key === key);
+
+    const zhihu = find('zhihu');
+    document.getElementById('zhihu-list').innerHTML = zhihu && zhihu.data
+      ? zhihu.data.slice(0,10).map((d,i) => `<a class="card-item" href="${d.link}" target="_blank"><span class="index${i<3?' hot':''}">${i+1}</span><span>${limit(d.title,40)}</span></a>`).join('')
+      : '<div class="empty-text">暂无数据</div>';
+
+    const juejin = find('juejin');
+    document.getElementById('juejin-list').innerHTML = juejin && juejin.data
+      ? juejin.data.slice(0,10).map((d,i) => `<a class="card-item" href="${d.link}" target="_blank"><span class="index${i<3?' hot':''}">${i+1}</span><span>${limit(d.title,40)}</span></a>`).join('')
+      : '<div class="empty-text">暂无数据</div>';
+
+    const hupu = find('hupu');
+    document.getElementById('hupu-list').innerHTML = hupu && hupu.data
+      ? hupu.data.slice(0,10).map((d,i) => `<a class="card-item" href="${d.link}" target="_blank"><span class="index${i<3?' hot':''}">${i+1}</span><span>${limit(d.title,40)}</span></a>`).join('')
+      : '<div class="empty-text">暂无数据</div>';
+  } catch(e) {
+    const errHtml = `<div class="debug-box"><div class="debug-title">❌ 热榜加载失败</div><pre class="debug-msg">${e.message}<br>momoyu.cc/api/hot/list</pre></div>`;
+    document.getElementById('zhihu-list').innerHTML = errHtml;
+    document.getElementById('juejin-list').innerHTML = errHtml;
+    document.getElementById('hupu-list').innerHTML = errHtml;
+  }
+})();
+
+// ====== NBA ======
+(async function loadNBA() {
+  const el = document.getElementById('nba-score');
+  try {
+    const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard');
+    if (!res.ok) throw new Error(`ESPN HTTP ${res.status}`);
+    const data = await res.json();
+    const cavsId = '5';
+    let found = null;
+
+    (data.events || []).forEach(event => {
+      if (found) return;
+      const comps = event.competitions?.[0];
+      if (!comps) return;
+      if (!comps.competitors?.some(c => c.team?.id === cavsId)) return;
+      found = event;
+    });
+
+    if (found) {
+      const comps = found.competitions[0];
+      const compsArr = comps.competitors;
+      const away = compsArr.find(c => c.homeAway === 'away');
+      const home = compsArr.find(c => c.homeAway === 'home');
+      const st = found.status?.type?.description || '';
+      const detail = found.status?.type?.detail || '';
+      if (away && home && compsArr.length === 2) {
+        const aScore = away.score?.displayValue || away.score || '0';
+        const hScore = home.score?.displayValue || home.score || '0';
+        el.innerHTML = `
+          <div class="status">${st === 'Final' || st === 'STATUS_FINAL' ? '比赛结束' : detail || '进行中'}</div>
+          <div class="matchup">
+            <div class="team"><div class="logo">${away.team?.abbreviation === 'CLE' ? '⚔️' : '🏀'}</div><span>${away.team?.abbreviation||''}</span></div>
+            <div class="score">${aScore} - ${hScore}</div>
+            <div class="team"><div class="logo">${home.team?.abbreviation === 'CLE' ? '⚔️' : '🏀'}</div><span>${home.team?.abbreviation||''}</span></div>
+          </div>`;
+      } else {
+        el.innerHTML = '<div class="status">比赛信息加载中...</div>';
+      }
+    } else {
+      el.innerHTML = '<div class="status" style="font-size:13px;padding:20px 0;">🏀 骑士队今日无比赛</div>';
+    }
+  } catch(e) {
+    el.innerHTML = `<div class="debug-box"><div class="debug-title">❌ NBA加载失败</div><pre class="debug-msg">${e.message}</pre></div>`;
+  }
+})();
+</script>
+
+</body>
+</html>
